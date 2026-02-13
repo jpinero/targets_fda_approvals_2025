@@ -69,6 +69,34 @@ Target selection remains a key determinant of success in pharmaceutical R&D, as 
 results_table <- fda   %>% select(drug_brand_name, sponsor,properties, indication ) %>% unique()
 DT::datatable(results_table, caption = "Table 1: 2025 FDA approvals" ,  filter = 'top', options = list(pageLength = 10,  autoWidth = F), rownames = F)
 
+
+
+results_table <- fda %>%
+  select(drug_brand_name, sponsor, properties, indication) %>%
+  distinct() %>%
+  mutate(
+    drug_brand_name = sub("a,b$", "", drug_brand_name)
+  ) %>%
+  mutate(
+    drug_brand_name = sub("a$", "", drug_brand_name)
+  )
+
+DT::datatable(
+  results_table,
+  caption = "Table 1: 2025 FDA approvals",
+  filter = "top",
+  options = list(pageLength = 10, autoWidth = FALSE),
+  rownames = FALSE
+) %>%
+  formatStyle(
+    "drug_brand_name",
+    target = "row",
+    backgroundColor = styleEqual(
+      c("Gepotidacin (Blujepa)", "Zoliflodacin (Nuzolvence)", "Clesrovimab (Enflonsia)"),
+      c("#fff3cd", "#fff3cd", "#fff3cd")  # light yellow highlight
+    )
+  )
+
 ```
 
 # From Legacy Targets to Emerging Opportunities
@@ -191,6 +219,38 @@ ggplotly(p, tooltip = "text")
 
 ```
 
+# Is target  promiscuity  really a problem?
+
+To better understand why many targets are associated with a large number of diseases, we examined disease-class enrichment for each gene. Instead of counting diseases, we looked at whether a target’s associations repeatedly fall within the same therapeutic areas compared with what is typically seen across all genes in DISGENET. This shows that these broad associations are often concentrated within a small number of related disease classes that, in most cases, include the therapeutic indication of the target.
+
+Representative examples illustrate this pattern (Figure 3). PCSK9 is linked to many diseases, but these are mostly related to hypercholesterolemia and related cardiovascular or metabolic disorders. Similarly, IL5 is enriched in immune, hematologic, and respiratory disease classes, consistent with its role as the target of depemokimab (Exdensur) for severe eosinophilic asthma. Together, these examples show that many targets are not broadly associated with unrelated diseases, but instead display focused association patterns within biologically and therapeutically coherent disease areas. This analysis challenges the notion that broad disease associations necessarily imply poor target specificity, highlighting instead that specificity often emerges at the level of therapeutic areas rather than individual diseases.
 
 
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 4, eval=T}
+enrich_dt <- fread("data/target_enrichment.tsv")
+
+ ggplot(enrich_dt[ enrich_dt$Symbol %in% c("PCSK9", "IL5")], aes(
+  x = disease_class_name,
+  y = log2_enrich,
+  fill = log2_enrich > 0
+)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ Symbol, ncol = 3) +
+  scale_fill_manual(values = c("#2C7BB6", "#D7191C")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 14, hjust = 1),
+      strip.text = element_text(size = 14, face = "bold") ,  
+        axis.text.y = element_text(size = 18)
+  ) +
+  labs(y = "log2 enrichment", x = "") + coord_flip()
+
+```
+
+
+
+
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 6, eval=T}
+```
 # References
