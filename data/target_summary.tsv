@@ -1,0 +1,50 @@
+GENE_SYMBOL	drugs	min_year_pmid	n_pmids	n_diseases
+APOC3	plozasiran	1979	1867	310
+BTK	remibrutinib; rilzabrutinib	1973	2636	634
+CACNA1C	etripamil	1993	1620	442
+CD3D	linvoseltamab	1987	134	128
+CHRM1	aceclidine	1994	171	87
+CHRM3	aceclidine	1983	387	223
+CLPP	dordaviprone	1993	141	79
+CSF1R	vimseltinib	1983	1679	734
+CTSC	brensocatib	1978	582	205
+DCK	doxecitine	1976	469	172
+EDNRA	atrasentan	1990	926	599
+EGFR	sevabertinib; sunvozertinib	1977	55737	2498
+ERBB2	sevabertinib; zongertinib	1983	42634	1521
+ESR1	imlunestrant	1974	26057	1683
+F12	garadacimab	1973	838	268
+FCGRT	nipocalimab	1978	114	84
+IL5	depemokimab	1977	3105	895
+JAK1	delgocitinib	1982	1608	495
+JAK2	delgocitinib	1993	9055	1083
+JAK3	delgocitinib	1976	1227	430
+KLKB1	donidalorsen; sebetralstat	1974	351	175
+MAP2K1	avutometinib; mirdametinib	1989	3316	1015
+MAP2K2	avutometinib; mirdametinib	1993	398	465
+MASP2	narsoplimab	1985	329	214
+MEN1	ziftomenib	1980	3305	634
+MET	telisotuzumab vedotin	1976	8566	1195
+MYBPC3	aficamten	1976	4266	228
+NTRK1	taletrectinib	1976	3106	803
+NTRK2	taletrectinib	1977	1997	651
+NTRK3	taletrectinib	1993	1006	396
+PAH	sepiapterin	1973	3380	294
+PCSK9	lerodalcibep	1994	2446	376
+PDCD1	pembrolizumab; penpulimab	1991	10213	1490
+PDE4B	nerandomilast	1978	671	307
+PTK2	defactinib	1988	3621	645
+PTK2B	defactinib	1991	581	256
+ROS1	taletrectinib	1987	1924	358
+SCN10A	suzetrigine	1993	613	236
+SERPINC1	fitusiran	1965	2959	497
+SSTR2	paltusotine	1992	1580	499
+TACR1	elinzanetant; tradipitant	1991	864	354
+TACR3	elinzanetant	1989	260	205
+TACSTD2	datopotamab deruxtecan	1985	704	241
+TK1	doxecitine; doxribtimine	1975	1154	347
+TK2	doxecitine; doxribtimine	1986	385	229
+TNFRSF17	linvoseltamab	1988	435	164
+TNFSF13	sibeprenlimab	1998	421	219
+TRPM8	acoltremon	2001	333	137
+TYK2	delgocitinib	1997	778	276
