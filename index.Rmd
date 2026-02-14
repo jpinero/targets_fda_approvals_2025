@@ -13,7 +13,6 @@ output:
     theme: flatly
     highlight: tango
     css: custom.css
-    code_folding: hide
 bibliography: fda.bib
 biblio-style: apalike
 ---
