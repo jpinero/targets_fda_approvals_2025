@@ -229,8 +229,9 @@ Representative examples illustrate this pattern (Figure 3). PCSK9 is linked to m
 
 ```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 4, eval=T, fig.align='center'}
 enrich_dt <- fread("data/target_enrichment.tsv")
+dc <- c( "C01","C20", "C15","C04","C16", "C05", "C06", "C08", "C14",   "C18",  "C10",   "F03")
 
- ggplot(enrich_dt[ enrich_dt$Symbol %in% c("PCSK9", "IL5")], aes(
+ ggplot(enrich_dt[ enrich_dt$Symbol %in% c("PCSK9", "IL5", "SERPINC1",  "EGFR", "ERBB2", "MET") & disease_class %in% dc], aes(
   x = disease_class_name,
   y = log2_enrich,
   fill = log2_enrich > 0
@@ -405,6 +406,94 @@ heatmaply(
 
 
 ```
+
+
+# From Crowded to Untapped: Target Maturity in 2025 Approvals
+To place the 2025 approvals in historical context, we examined prior drug and indication coverage for these targets using ChEMBL, excluding current-year approvals. The resulting landscape reveals heterogeneity in prior clinical maturity, ranging from targets with no previously approved drugs to highly exploited targets associated with dozens of compounds and indications. Well-established targets such as EGFR, ESR1, PDCD1, and CACNA1C sit at the highly saturated end of this spectrum, reflecting decades of iterative clinical exploration and extensive target reuse across disease areas.
+
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=12, fig.height= 8, eval=T}
+
+chembldt <- fread("data/targets_chembl.tsv")
+
+kk <- chembldt[chembldt$n_indications >100 | chembldt$n_drugs_total > 20   ,]
+
+label_targets <- c( kk$GENE_SYMBOL, 
+  "EGFR", "ESR1", "PDCD1", "NTRK3", "SCN10A", "ERBB2",
+  "TNFSF13", "CLPP",  "CHRM3", "JAK3",  "CLPP", "CTSC",   "PCSK9"
+) %>% unique()
+
+
+library(plotly)
+library(scales)
+
+p <- ggplot(chembldt, aes(
+  x = n_drugs_total,
+  y = n_indications,
+  size = n_drugs_phase4,
+  color = support,
+  text = paste0(
+    "<b>", GENE_SYMBOL, "</b>",
+    "<br>Total drugs: ", n_drugs_total,
+    "<br>Total indications: ", n_indications,
+    "<br>Phase IV drugs: ", n_drugs_phase4,
+    "<br>Molecular support: ", support
+  )
+)) +
+  geom_point(alpha = 0.75) +
+  scale_size_continuous(
+    name = "Phase IV drugs",
+    range = c(4, 20)
+  ) +
+  scale_color_manual(
+    values = c("Y" = "#d02591", "N" = "darkblue"),
+    name = "Molecular support"
+  ) +
+  labs(
+    x = "Total drugs in ChEMBL (excluding 2025 approvals)",
+    y = "Total indications in ChEMBL",
+    title = "Historical target maturity prior to 2025 FDA approvals"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "right",
+    panel.grid.minor = element_blank()
+  )
+
+# Optional: keep labels for key genes (non-repel)
+p <- p +
+  geom_text(
+    data = chembldt %>% filter(GENE_SYMBOL %in% label_targets),
+    aes(label = GENE_SYMBOL),
+    size = 5,
+    vjust = -1,
+     nudge_y = 10,     # move up
+    nudge_x = 1,   
+    show.legend = FALSE
+  )
+
+# Convert to interactive
+ggplotly(p, tooltip = "text") %>%
+  layout(
+    font = list(family = "Poppins, sans-serif", size = 14)
+  )
+
+```
+
+
+In contrast, a subset of targets—including CLPP, CTSC, MASP2, and TNFSF13—shows little or no prior indication coverage despite substantial molecular and biological evidence, underscoring their relatively recent or niche clinical emergence.
+
+Together, these patterns show that the 2025 approvals draw from a heterogeneous target landscape, where regulatory success arises both from long-standing clinical familiarity and from comparatively underexploited targets. 
+
+The image shows a graph comparing total indications in ChEMBL and total drugs in ChEMBL (excluding 2025 approvals) for the 2025 FRA-approved drugs.
+Figure 7. Distribution of historical drug and indication coverage for molecular targets of FDA-approved drugs in 2025, derived from ChEMBL and excluding current-year approvals. Molecular support indicates if there is information about the target-indication association in DISGENET.
+
+# Key takeaways
+The 2025 FDA approvals illustrate that successful drug targets strike a balance between breadth and focus: they are neither narrowly confined to a single disease nor diffusely associated with unrelated conditions, but instead show broad molecular and disease associations anchored within a small number of biologically and therapeutically coherent disease classes. Most approved drugs are supported by molecular evidence that either directly matches the approved indication or aligns closely with related disease phenotypes, underscoring how strong target–indication concordance can reduce translational risk. Analyses based on DISGENET highlight how structured gene–disease association data can help distinguish true therapeutic coherence from superficial disease breadth, making it a valuable resource for interpreting target relevance in a systematic way.
+
+While tissue-enriched expression often reinforces classical target-selection heuristics, it is not a universal requirement for druggability: many clinically successful targets are broadly expressed or appear weakly expressed in reference atlases, achieving selectivity instead through disease activation, cell-type restriction, or therapeutic modality. 
+
+Taken together, these findings emphasize that target selection is ultimately a systems-level decision, where integrating molecular evidence, disease-class specificity, expression context, and historical maturity provides a more robust framework than relying on any single metric alone.
+
 
 
 # References
