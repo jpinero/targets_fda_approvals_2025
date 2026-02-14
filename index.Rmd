@@ -37,8 +37,8 @@ library(data.table)
 library(DT)
 library(tidyr)
 library(dplyr)
-library(httr)
-library(jsonlite)
+library(tibble)
+library(heatmaply)
 library(kableExtra)
 library(sysfonts)
 library(showtext)
@@ -46,6 +46,7 @@ library(ggplot2)
 library(ggrepel)
 library(scales)
 library(plotly)
+library(circlize)
 
 font_add_google("Poppins", "poppins")
 showtext_auto()
@@ -104,7 +105,7 @@ DT::datatable(
 
 All drug targets are represented in DISGENET, underscoring their established relevance to human disease. Most are associated with hundreds of disease phenotypes. All are referenced in hundreds, often thousands, of publications in the disease genomics literature, reflecting decades of accumulated biological and clinical knowledge. Consistent with this depth of evidence, many 2025 FDA approvals focus on long-studied targets such as EGFR, ERBB2, and ESR1, which exhibit publication histories dating back to the 1970s and broad links to diverse disease areas.
 
-```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width= 6, fig.height= 6, eval=T}
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width= 6, fig.height= 6, fig.align='center', eval=T}
 
 target_summary <- fread("data/target_summary.tsv")
 DT::datatable(target_summary, caption = "Table 2: Target Summary" ,  filter = 'top', options = list(pageLength = 10,  autoWidth = F), rownames = F)
@@ -154,7 +155,7 @@ ggplotly(p, tooltip = "text")
 DISGENET also shows that most of the approved targets appear in clinical trial contexts. Examples include patient stratification (e.g., JAK2, MET) and monitoring pharmacodynamic response (e.g., APOC3, PCSK9, BTK), reflecting their translational relevance throughout drug development.
 
 
-```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 6, eval=T}
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 6, eval=T, fig.align='center'}
 
 ct_summary <- fread("data/ct_summary.tsv")
 ct_summary <- rename(ct_summary, N.Clinical.Trials  =nct , N.Diseases.CTs = ndis)
@@ -226,7 +227,7 @@ To better understand why many targets are associated with a large number of dise
 Representative examples illustrate this pattern (Figure 3). PCSK9 is linked to many diseases, but these are mostly related to hypercholesterolemia and related cardiovascular or metabolic disorders. Similarly, IL5 is enriched in immune, hematologic, and respiratory disease classes, consistent with its role as the target of depemokimab (Exdensur) for severe eosinophilic asthma. Together, these examples show that many targets are not broadly associated with unrelated diseases, but instead display focused association patterns within biologically and therapeutically coherent disease areas. This analysis challenges the notion that broad disease associations necessarily imply poor target specificity, highlighting instead that specificity often emerges at the level of therapeutic areas rather than individual diseases.
 
 
-```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 4, eval=T}
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 4, eval=T, fig.align='center'}
 enrich_dt <- fread("data/target_enrichment.tsv")
 
  ggplot(enrich_dt[ enrich_dt$Symbol %in% c("PCSK9", "IL5")], aes(
@@ -248,9 +249,162 @@ enrich_dt <- fread("data/target_enrichment.tsv")
 
 ```
 
+# Evidence Strength and Target Selection
 
 
+To what extent does DISGENET evidence support the approved clinical indications of these targets? Thirty-seven drugs show evidence supporting their approved indication, or a closely related disease phenotype (Figure 4). 
 
-```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 6, eval=T}
+Some targets are supported by strong and long-standing evidence. For example, PCSK9 displays maximal strength of association (DISGENET score 1) with hypercholesterolemia, fully consistent with its role as the therapeutic target of lerodalcibep (Lerochol). Similarly, F12 shows a strong association with hereditary angioedema, concordant with its targeting by garadacimab (Andembry), while PAH exhibits robust genetic support for hyperphenylalaninemia, fully aligned with its modulation by sepiapterin (Sephience). In these cases, molecular association data indicate that the targets are causally involved in the approved disease indication.
+
+Other targets exhibit more moderate but biologically coherent support. CSF1R, targeted by vimseltinib (Romvimza) for tenosynovial giant cell tumors, is associated with fibrous histiocytic and related proliferative disorders, reflecting shared cellular origins and signaling pathways. Similarly, TRPM8, targeted by acoltremon (Tryptyr) for dry eye disease, shows molecular associations with dry eye syndromes and related sensory and epithelial dysfunctions. Collectively, these patterns suggest that regulatory success is often underpinned not only by direct molecular evidence for a specific indication, but also by a broader network of genetically and biologically related disease associations that support translational plausibility.
+
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width= 10, fig.height= 10, eval=T}
+
+
+pink_palette <- colorRampPalette(
+  c("#ffffff", "#f4c2df", "#d02591", "#7a0f52")
+)(100)
+
+
+support <- fread("data/disgenet_support.tsv")
+tt <- reshape2::dcast(drug~diseaseName, data= support , value.var = "score")
+tt[is.na(tt)] <- 0
+rownames(tt) <- tt$drug
+tt <- tt %>% dplyr::select(-drug)
+cc <- reshape2::dcast(drug~diseaseName, data= support , value.var = "symbolOfGene")
+cc[is.na(cc)] <- ""
+rownames(cc) <- cc$drug
+cc <- cc %>% select(-drug)
+
+
+library(heatmaply)
+
+heatmaply(
+  tt,
+  colors = pink_palette,
+  cellnote = cc,
+  custom_hovertext = cc,
+  cellnote_textposition = "middle center",
+  cellnote_size = 9,
+  show_dendrogram = c(FALSE, FALSE),
+  grid_color = "white",
+  xlab = "",
+  ylab = ""
+) %>%
+  layout(
+    font = list(family = "Poppins")
+  )
+
 ```
+
+
+
+# Beyond Tissue Specificity in Target Selection
+Analysis of GTEx expression profiles revealed patterns in the tissue distribution of 2025 drug targets. A subset shows enriched expression in tissues directly relevant to their therapeutic indication. For example, PCSK9, APOC3, and PAH display strong liver-enriched expression, consistent with their roles in lipid metabolism and amino acid homeostasis. Similarly, MYBPC3 exhibits highly specific expression in cardiac muscle, aligning closely with its role in cardiomyopathy and supporting the paradigm that tissue-restricted expression can enhance on-target efficacy while limiting off-target effects.
+
+The image shows a heatmap of tissue expression profiles of targets for drugs approved in 2025.
+Figure 6. Tissue expression profiles of targets for drugs approved in 2025. The heatmap shows median gene expression across GTEx tissues. The color intensity indicates relative expression levels within each gene. The pink boxes highlight the examples discussed in the text. 
+
+A small subset of approved targets shows very low or near-absent expression across GTEx tissues. In most cases, this likely reflects limitations of bulk adult tissue transcriptomic data rather than true biological absence. Several targets are primarily expressed in rare cell populations or disease-activated states that are poorly captured in healthy reference atlases. For example, IL5 exhibits inducible expression in activated immune cells. In this case, disease context rather than baseline tissue expression underpins therapeutic relevance.
+
+Conversely, other targets exhibit broad or near-ubiquitous expression across tissues. Overall, these findings indicate that tissue restriction is not a universal requirement for druggability. Instead, clinical success often depends on a balance between disease-relevant expression, pathway context, and the ability to achieve functional selectivity through dosing, delivery, or molecular mechanism. 
+
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=12, fig.height= 8, eval=T}
+
+gtex<-fread("data/gtex_targets.tsv")
+gtex <- gtex %>% # filter(V1 %in% target_summary$GENE_SYMBOL) %>%
+    column_to_rownames("V1")
+expr_log <- log10(gtex + 1)
+
+# Transpose so tissues are rows and genes are columns
+expr_log <- t(expr_log)
+
+# Optional: Remove specific tissues (uncomment and modify as needed)
+tissues_to_remove <- c(
+  "Brain_Anterior_cingulate_cortex_BA24",
+  "Brain_Caudate_basal_ganglia",
+  "Brain_Cerebellar_Hemisphere",
+  "Brain_Frontal_Cortex_BA9",
+  "Brain_Spinal_cord_cervical_c-1",
+  "Brain_Nucleus_accumbens_basal_ganglia",
+  "Brain_Putamen_basal_ganglia",
+  "Brain_Spinal_cord_cervical_c-1", 
+  "Cells_Cultured_fibroblasts",
+  "Cells_EBV-transformed_lymphocytes",
+  "Colon_Transverse",
+  "Colon_Transverse_Mixed_Cell",
+  "Colon_Transverse_Mucosa",
+  "Colon_Transverse_Muscularis",
+  "Esophagus_Gastroesophageal_Junction",
+  "Esophagus_Muscularis",
+  "Liver_Hepatocyte",
+  "Liver_Mixed_Cell",
+  "Liver_Portal_Tract",
+  "Minor_Salivary_Gland",
+  "Pancreas_Acini",
+  "Pancreas_Islets",
+  "Pancreas_Mixed_Cell",
+  "Skin_Not_Sun_Exposed_Suprapubic",
+  "Small_Intestine_Terminal_Ileum_Lymphoid_Aggregate",
+  "Small_Intestine_Terminal_Ileum_Mixed_Cell",
+  "Stomach_Mixed_Cell",
+  "Stomach_Muscularis"
+)
+
+# Remove tissues if specified
+if (exists("tissues_to_remove") && length(tissues_to_remove) > 0) {
+  expr_log <- expr_log[!rownames(expr_log) %in% tissues_to_remove, , drop = FALSE]
+}
+
+# Replace underscores with spaces in tissue names
+rownames(expr_log) <- gsub("_", " ", rownames(expr_log))
+
+
+heatmaply(
+  expr_log,
+  
+  # Color settings
+  colors = colorRampPalette(pink_palette)(256),
+  limits = c(0, 4),
+  
+  # Clustering
+  dendrogram = "both",
+  hclust_method = "average",
+  dist_method = "euclidean",
+  
+  # Hide dendrograms but keep clustering
+  hide_colorbar = FALSE,
+  branches_lwd = 0.1,
+  
+  # No grid/borders
+  grid_gap = 0,
+  grid_color = "white",
+  
+  # Labels
+  labRow = rownames(expr_log),
+  labCol = colnames(expr_log),
+  
+  # Font sizes
+  fontsize_row = 14,
+  fontsize_col = 14,
+  
+  # Margins
+  margins = c(120, 120, 60, 40),
+  
+  # Plotly settings
+  plot_method = "plotly",
+  
+  # Additional aesthetics
+  key.title = "log₁₀(TPM + 1)",
+  subplot_widths = c(0.85, 0.15),
+  subplot_heights = c(0.15, 0.85)
+)
+
+
+
+
+
+```
+
+
 # References

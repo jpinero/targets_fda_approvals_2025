@@ -1,0 +1,41 @@
+Drug_brand_name	drug	Properties	DRUGBANKID	CHEMBLID	Indication	CUI	CUI_NAME	EXACT	NCBI_ID	symbolOfGene	diseaseName	score
+Acoltremon (Tryptyr)	acoltremon	TRPM8 thermoreceptor agonist	DB19202	CHEMBL2441929	Dry eye disease	C0013238	Dry Eye Syndromes	TRUE	79054	TRPM8	Dry Eye Syndromes	0.25
+Aficamten (Myqorzo)	aficamten	Cardiac myosin inhibitor	DB18490	CHEMBL4847050	Obstructive hypertrophic cardiomyopathy	C4551472	Hypertrophic obstructive cardiomyopathy	TRUE	4607	MYBPC3	Hypertrophic obstructive cardiomyopathy	0.6
+Donidalorsen (Dawnzera)	donidalorsen	Prekallikrein-targeted ASO	DB18751	CHEMBL4650235	Hereditary angioedema prevention	C0019243	Angioedemas, Hereditary	TRUE	3818	KLKB1	Angioedemas, Hereditary	0.35
+Doxecitine plus doxribtimine (Kygevvi)	doxecitine	Pyrimidine nucleosides	DB02594	CHEMBL66115	Thymidine kinase 2 deficiency	C5569018	Thymidine kinase 2 deficiency	TRUE	1633	DCK	Thymidine kinase 2 deficiency (disorder)	0.25
+Doxecitine plus doxribtimine (Kygevvi)	doxribtimine	Pyrimidine nucleosides	DB04485	CHEMBL52609	Thymidine kinase 2 deficiency	C5569018	Thymidine kinase 2 deficiency	TRUE	7084	TK2	Thymidine kinase 2 deficiency (disorder)	0.2
+Garadacimab (Andembry)	garadacimab	Activated factor XII-targeted mAb	DB15629		Hereditary angioedema prevention	C0019243	Angioedemas, Hereditary	TRUE	2161	F12	Angioedemas, Hereditary	1
+Linvoseltamab (Lynozyfic)	linvoseltamab	BCMA × CD3 bispecific T cell engager	DB17447	CHEMBL5095373	Multiple myeloma	C0026764	Multiple Myeloma	TRUE	608	TNFRSF17	Multiple Myeloma	1
+Mirdametinib (Gomekli)	mirdametinib	MEK1/2 kinase inhibitor	DB07101	CHEMBL507361	Neurofibromatosis type 1	C0027831	Neurofibromatosis 1	TRUE	5604	MAP2K1	Neurofibromatosis 1	0.45
+Nerandomilast (Jascayd)	nerandomilast	PDE4 inhibitor	DB18237	CHEMBL5314532	Idiopathic pulmonary fibrosis	C1800706	Idiopathic Pulmonary Fibrosis	TRUE	5142	PDE4B	Idiopathic Pulmonary Fibrosis	0.2
+Nipocalimab (Imaavy)	nipocalimab	Neonatal Fc receptor-targeted mAb	DB16257	CHEMBL4594310	Generalized myasthenia gravis	C0751339	Myasthenia Gravis, Generalized	TRUE	2217	FCGRT	Generalized Myasthenia Gravis	0.1
+Paltusotine (Palsonify)	paltusotine	Somatostatin receptor agonist	DB16277	CHEMBL5267842	Acromegaly	C0001206	Acromegaly	TRUE	6752	SSTR2	Acromegaly	0.35
+Penpulimab (Penpulimab)	penpulimab	PD1-targeted mAb	DB16747	CHEMBL4297571	Nasopharyngeal carcinoma	C2931822	Nasopharyngeal carcinoma	TRUE	5133	PDCD1	Nasopharyngeal carcinoma	0.45
+Plozasiran (Redemplo)	plozasiran	ApoC-III-targeted siRNA	DB18997	CHEMBL6068438	Triglycerides in familial chylomicronemia syndrome	C5442313	Familial chylomicronemia syndrome	TRUE	345	APOC3	Familial chylomicronemia syndrome	0.35
+Rilzabrutinib (Wayrilz)	rilzabrutinib	BTK kinase inhibitor	DB17709	CHEMBL3702854	Immune thrombocytopenia	C0398650	Immune thrombocytopenic purpura	TRUE	695	BTK	Immune thrombocytopenic purpura	0.2
+Sebetralstat (Ekterly)	sebetralstat	Plasma kallikrein inhibitor	DB18305	CHEMBL5095248	Hereditary angioedema attacks	C0019243	Angioedemas, Hereditary	TRUE	3818	KLKB1	Angioedemas, Hereditary	0.35
+Sepiapterin (Sephience)	sepiapterin	Phenylalanine hydroxylase activator	DB16326	CHEMBL1255653	Hyperphenylalaninemia	C0751435	Hyperphenylalaninaemia	TRUE	5053	PAH	Hyperphenylalaninemia	0.9
+Vimseltinib (Romvimza)	vimseltinib	CSF1R kinase inhibitor	DB17520	CHEMBL5095202	Tenosynovial giant cell tumours	C1318543	Fibrous histiocytoma of tendon sheath	TRUE	1436	CSF1R	Fibrous histiocytoma of tendon sheath	0.35
+Atrasentan (Vanrafia)	atrasentan	Endothelin receptor antagonist	DB06199	CHEMBL9194	Proteinuria in adults with primary IgAN	C0017661	IGA Glomerulonephritis	FALSE	1909	EDNRA	IGA Glomerulonephritis	0.2
+Avutometinib plus defactinib (Avmapki Fakzynja Co-Pack)	avutometinib	MEK1 inhibitor plus FAK kinase inhibitor	DB15254	CHEMBL3264002	KRAS-mutated recurrent low-grade serous ovarian cancer	C1335177	Ovarian Serous Adenocarcinoma	FALSE	5604	MAP2K1	Ovarian Serous Adenocarcinoma	0.2
+Avutometinib plus defactinib (Avmapki Fakzynja Co-Pack)	defactinib	MEK1 inhibitor plus FAK kinase inhibitor	DB12282	CHEMBL3137331	KRAS-mutated recurrent low-grade serous ovarian cancer	C1335177	Ovarian Serous Adenocarcinoma	FALSE	5747	PTK2	Ovarian Serous Adenocarcinoma	0.2
+Datopotamab deruxtecan (Datroway)	datopotamab deruxtecan	TROP2-targeted ADC; topoisomerase inhibitor payload	DB16410	CHEMBL4297939	HR-positive, HER2-negative breast cancer	C0006142	Malignant neoplasm of breast	FALSE	4070	TACSTD2	Malignant neoplasm of breast	0.35
+Depemokimab (Exdensur)	depemokimab	IL-5-targeted mAb	DB18846	CHEMBL4650469	Severe asthma, eosinophilic phenotype	C0340076	Asthmatic pulmonary eosinophilia	FALSE	3567	IL5	Asthmatic pulmonary eosinophilia	0.35
+Elinzanetant (Lynkuet)	elinzanetant	NK1 and NK3 receptor antagonist	DB18968	CHEMBL4802157	Vasomotor symptoms due to menopause	C0750152	vasomotor symptom	FALSE	6870	TACR3	vasomotor symptom	0.2
+Etripamil (Cardamyst)	etripamil	Calcium channel blocker	DB12605	CHEMBL3707312	Paroxysmal supraventricular tachycardia	C0039240	Supraventricular tachycardia	FALSE	775	CACNA1C	Supraventricular tachycardia	0.05
+Fitusiran (Qfitlia)	fitusiran	Antithrombin-targeted siRNA	DB15002	CHEMBL4297754	Bleeding episodes in haemophilia A or B	C0019069	Hemophilia A	FALSE	462	SERPINC1	Hemophilia A	0.35
+Fitusiran (Qfitlia)	fitusiran	Antithrombin-targeted siRNA	DB15002	CHEMBL4297754	Bleeding episodes in haemophilia A or B	C0008533	Hemophilia B	FALSE	462	SERPINC1	Hemophilia B	0.2
+Imlunestrant (Inluriyo)	imlunestrant	Selective oestrogen receptor degrader	DB19043	CHEMBL5095183	ER-positive, EGFR2-negative, ER1-mutated breast cancer	C0006142	Malignant neoplasm of breast	FALSE	2099	ESR1	Malignant neoplasm of breast	1
+Lerodalcibep (Lerochol)	lerodalcibep	PCSK9-targeted adnectin	DB19071	CHEMBL4650405	LDL-C-lowering in hypercholesterolaemia	C0020443	Hypercholesterolemia	FALSE	255738	PCSK9	Hypercholesterolemia	1
+Narsoplimab (Yartemlea),b	narsoplimab	MASP2-directed mAb	DB16418	CHEMBL4298195	Haematopoietic stem cell transplant-associated thrombotic microangiopathy	C2717961	Thrombotic Microangiopathies	FALSE	10747	MASP2	Thrombotic Microangiopathies	0.2
+Pembrolizumab plus berahyaluronidase alfa (Keytruda Qlex)	pembrolizumab	PD1-targeted mAb and an endoglycosidase to enable subcutaneous delivery	DB09037	CHEMBL3137343	Solid tumours approved for the intravenous formulation of pembrolizumab	C0280100	Solid Neoplasm	FALSE	5133	PDCD1	Solid Neoplasm	0.45
+Remibrutinib (Rhapsido)	remibrutinib	BTK kinase inhibitor	DB16852	CHEMBL4483575	Spontaneous urticaria	C0042109	Urticaria	FALSE	695	BTK	Urticaria	0.25
+Sevabertinib (Hyrnuo)	sevabertinib	HER2 kinase inhibitor	DB21667	CHEMBL6068074	Non-squamous NSCLC with HER2 activating mutations	C0007131	Non-Small Cell Lung Carcinoma	FALSE	1956	EGFR	Non-Small Cell Lung Carcinoma	1
+Sibeprenlimab (Voyxact) a	sibeprenlimab	APRIL-targeted mAb	DB18919	CHEMBL4594614	Proteinuria in primary IgAN	C0017661	IGA Glomerulonephritis	FALSE	8741	TNFSF13	IGA Glomerulonephritis	0.8
+Sunvozertinib (Zegfrovy)	sunvozertinib	EGFR kinase inhibitor	DB18925	CHEMBL5314564	NSCLC with EGFR exon 20 mutations	C0007131	Non-Small Cell Lung Carcinoma	FALSE	1956	EGFR	Non-Small Cell Lung Carcinoma	1
+Suzetrigine (Journavx)	suzetrigine	NaV1.8 inhibitor	DB18927	CHEMBL5314487	Acute pain	C0030193	Pain	FALSE	6336	SCN10A	Pain	0.45
+Taletrectinib (Ibtrozi)	taletrectinib	ROS1 kinase inhibitor	DB18711	CHEMBL4650989	ROS1-positive NSCLC	C0007131	Non-Small Cell Lung Carcinoma	FALSE	6098	ROS1	Non-Small Cell Lung Carcinoma	0.95
+Telisotuzumab vedotin (Emrelis)	telisotuzumab vedotin	c-Met-targeted ADC; microtubule inhibitor payload	DB15104	CHEMBL3990032	Non-squamous NSCLC with high c-Met protein overexpression	C0007131	Non-Small Cell Lung Carcinoma	FALSE	4233	MET	Non-Small Cell Lung Carcinoma	1
+Tradipitant (Nereus)b	tradipitant	NK1 receptor antagonist	DB12580	CHEMBL3544984	Vomiting induced by motion	C0042963	Vomiting	FALSE	6869	TACR1	Vomiting	0.75
+Ziftomenib (Komzifti)	ziftomenib	Menin inhibitor	DB17171	CHEMBL5095038	AML with a susceptible NPM1 mutation	C0023467	Leukemia, Myelocytic, Acute	FALSE	4221	MEN1	Leukemia, Myelocytic, Acute	0.45
+Zongertinib (Hernexeos)	zongertinib	HER2 kinase inhibitor	DB18762	CHEMBL5314498	Non-squamous NSCLC with HER2 activating mutations	C0007131	Non-Small Cell Lung Carcinoma	FALSE	2064	ERBB2	Non-Small Cell Lung Carcinoma	1
