@@ -1,30 +1,41 @@
 ---
-title: "Target details for \n for FDA drug approvals \n 2025"
+title: "Target Details for FDA Drug Approvals 2025"
 date: "Last update: `r Sys.setlocale('LC_TIME', 'C') ; format(Sys.time(), '%d, %B, %Y')`"    
 output:
   html_document:
     toc: true
+    toc_float: 
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 3
+    number_sections: false
     fig_caption: true
+    theme: flatly
+    highlight: tango
+    css: custom.css
+    code_folding: hide
 bibliography: fda.bib
 biblio-style: apalike
-
-
 ---
-<br>
-<b>DISGENET  is provided by [Medbioinformatics Solutions S.L.](https://www.medbioinformatics.com/)</b>   
-Rambla de Cataluña 14, 7º 1ª 
-08007  Barcelona (Spain)   
-<b>Contact us at </b> info@disgenet.com   
 
+<div class="header-box">
+<strong>DISGENET</strong> is provided by <a href="https://www.medbioinformatics.com/" target="_blank">Medbioinformatics Solutions S.L.</a><br>
+Rambla de Cataluña 14, 7º 1ª<br>
+08007 Barcelona (Spain)<br>
+<strong>Contact us:</strong> <a href="mailto:info@disgenet.com">info@disgenet.com</a>
+</div>
 
 
 ```{r set-options, echo=FALSE, cache=FALSE}
 knitr::opts_chunk$set(
-  eval=TRUE
+  eval=TRUE,
+  echo=FALSE,
+  warning=FALSE,
+  message=FALSE
 )
 htmltools::img(src = knitr::image_uri(file.path(".", "images/logo_disgenet.png")), 
-               alt = 'logo', 
-               style = 'position:absolute; top:0; right:0; padding:10px;')
+               alt = 'DISGENET logo', 
+               style = 'position:absolute; top:10px; right:20px; padding:10px; max-width:180px; height:auto;')
 ```
 
 # Introduction
@@ -50,6 +61,12 @@ library(circlize)
 
 font_add_google("Poppins", "poppins")
 showtext_auto()
+
+# Define custom color palette
+disgenet_primary <- "#d02591"
+disgenet_secondary <- "#4A90E2"
+disgenet_accent <- "#7B68EE"
+
 createLink <- function(chemblid){
   sprintf("<a href='https://www.ebi.ac.uk/chembl/compound_report_card/%s' target='_blank'>%s</a>",chemblid, chemblid)
 }
@@ -67,34 +84,42 @@ Target selection remains a key determinant of success in pharmaceutical R&D, as 
 
 ```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width= 10, fig.height= 10, eval=T}
 
-results_table <- fda   %>% select(drug_brand_name, sponsor,properties, indication ) %>% unique()
-DT::datatable(results_table, caption = "Table 1: 2025 FDA approvals" ,  filter = 'top', options = list(pageLength = 10,  autoWidth = F), rownames = F)
-
-
-
 results_table <- fda %>%
   select(drug_brand_name, sponsor, properties, indication) %>%
   distinct() %>%
   mutate(
-    drug_brand_name = sub("a,b$", "", drug_brand_name)
-  ) %>%
-  mutate(
+    drug_brand_name = sub("a,b$", "", drug_brand_name),
     drug_brand_name = sub("a$", "", drug_brand_name)
   )
 
 DT::datatable(
   results_table,
-  caption = "Table 1: 2025 FDA approvals",
+  caption = "Table 1: 2025 FDA Drug Approvals",
   filter = "top",
-  options = list(pageLength = 10, autoWidth = FALSE),
-  rownames = FALSE
+  options = list(
+    pageLength = 10, 
+    autoWidth = FALSE,
+    dom = 'Bfrtip',
+    scrollX = TRUE,
+    columnDefs = list(
+      list(width = '150px', targets = 0),
+      list(width = '200px', targets = 1),
+      list(width = '120px', targets = 2)
+    )
+  ),
+  rownames = FALSE,
+  class = 'cell-border stripe hover'
 ) %>%
+  formatStyle(
+    columns = colnames(results_table), 
+    fontSize = '13px'
+  ) %>%
   formatStyle(
     "drug_brand_name",
     target = "row",
     backgroundColor = styleEqual(
       c("Gepotidacin (Blujepa)", "Zoliflodacin (Nuzolvence)", "Clesrovimab (Enflonsia)"),
-      c("#fff3cd", "#fff3cd", "#fff3cd")  # light yellow highlight
+      c("#fff3cd", "#fff3cd", "#fff3cd")
     )
   )
 
@@ -108,7 +133,13 @@ All drug targets are represented in DISGENET, underscoring their established rel
 ```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width= 6, fig.height= 6, fig.align='center', eval=T}
 
 target_summary <- fread("data/target_summary.tsv")
-DT::datatable(target_summary, caption = "Table 2: Target Summary" ,  filter = 'top', options = list(pageLength = 10,  autoWidth = F), rownames = F)
+DT::datatable(target_summary, caption = "Table 2: Target Summary" ,  filter = 'top', 
+              options = list(pageLength = 10,  autoWidth = F,
+                           dom = 'Bfrtip',
+                           scrollX = TRUE), 
+              rownames = F,
+              class = 'cell-border stripe hover') %>%
+  formatStyle(columns = colnames(target_summary), fontSize = '13px')
 
 
 p <- ggplot(
@@ -126,12 +157,12 @@ p <- ggplot(
   )
 ) +
   geom_point(
-    alpha = 0.8,
-    color = "#d02591"
+    alpha = 0.7,
+    color = disgenet_primary
   ) +
   scale_size_continuous(
     name   = "Number of PMIDs",
-    range  = c(2, 10),
+    range  = c(3, 12),
     breaks = c(100, 500, 1000, 10000, 50000),
     labels = scales::comma
   ) +
@@ -141,13 +172,24 @@ p <- ggplot(
   ) +
   labs(
     x = "Year of first PMID association",
-    y = "Number of associated diseases"
+    y = "Number of associated diseases",
+    title = "Target Discovery Timeline and Disease Associations"
   ) +
-  theme_minimal(base_family = "poppins")
+  theme_minimal(base_family = "poppins", base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 15, hjust = 0),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "#E5E5E5", linewidth = 0.3)
+  )
 
-ggplotly(p, tooltip = "text")
+ggplotly(p, tooltip = "text") %>%
+  layout(font = list(family = "Poppins, sans-serif", size = 12))
 
 ```
+
+<div class="figure-caption">
+<strong>Figure 1. Target discovery timeline and disease associations.</strong> Each point represents a drug target approved in 2025. The x-axis shows when the target was first linked to disease in the literature (year of first PMID), the y-axis shows the number of diseases associated with the target, and point size reflects the total number of publications (PMIDs).
+</div>
 
 
 # Translational and Disease Insights
@@ -161,15 +203,18 @@ ct_summary <- fread("data/ct_summary.tsv")
 ct_summary <- rename(ct_summary, N.Clinical.Trials  =nct , N.Diseases.CTs = ndis)
 DT::datatable(
   ct_summary,
-  caption = "Table 2: Clinical Trials info for targets of 2025 FDA approvals",
+  caption = "Table 3: Clinical Trials info for targets of 2025 FDA approvals",
   filter = "top",
   options = list(
     pageLength = 10,
-    autoWidth = TRUE
+    autoWidth = TRUE,
+    dom = 'Bfrtip',
+    scrollX = TRUE
   ),
   rownames = FALSE,
-  width = "600px"   # 👈 make table narrower
-)
+  class = 'cell-border stripe hover'
+) %>%
+  formatStyle(columns = colnames(ct_summary), fontSize = '13px')
 
 
 yearly_counts <- fread("data/ct_yearly_counts.tsv")
@@ -198,27 +243,37 @@ p <- ggplot(
     )
   )
 ) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
+  geom_line(linewidth = 1.2, alpha = 0.9) +
+  geom_point(size = 2.5, alpha = 0.8) +
   labs(
     x = "Year",
-    y = "Cumulative number of clinical trials"
+    y = "Cumulative number of clinical trials",
+    title = "Growth of Clinical Trial Activity by Target"
   ) +
   scale_x_continuous(
     expand = expansion(mult = c(0.02, 0.12))
   ) +
-  theme_minimal(base_size = 18) +
+  scale_color_brewer(palette = "Set2") +
+  theme_minimal(base_size = 13, base_family = "poppins") +
   theme(
     legend.position = "none",
-    axis.title = element_text(size = 14, face = "bold"),
-    axis.text  = element_text(size = 14)
+    plot.title = element_text(face = "bold", size = 15, hjust = 0),
+    axis.title = element_text(size = 13, face = "bold"),
+    axis.text  = element_text(size = 12),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "#E5E5E5", linewidth = 0.3)
   )
 
-ggplotly(p, tooltip = "text")
+ggplotly(p, tooltip = "text") %>%
+  layout(font = list(family = "Poppins, sans-serif", size = 12))
  
 
-
 ```
+
+<div class="figure-caption">
+<strong>Figure 2. Growth of clinical trial activity by target over time.</strong> Cumulative number of clinical trials for selected targets in DISGENET. The lines show how clinical investigation has expanded for key targets approved in 2025.
+</div>
+
 
 # Is target  promiscuity  really a problem?
 
@@ -227,28 +282,46 @@ To better understand why many targets are associated with a large number of dise
 Representative examples illustrate this pattern (Figure 3). PCSK9 is linked to many diseases, but these are mostly related to hypercholesterolemia and related cardiovascular or metabolic disorders. Similarly, IL5 is enriched in immune, hematologic, and respiratory disease classes, consistent with its role as the target of depemokimab (Exdensur) for severe eosinophilic asthma. Together, these examples show that many targets are not broadly associated with unrelated diseases, but instead display focused association patterns within biologically and therapeutically coherent disease areas. This analysis challenges the notion that broad disease associations necessarily imply poor target specificity, highlighting instead that specificity often emerges at the level of therapeutic areas rather than individual diseases.
 
 
-```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=6, fig.height= 4, eval=T, fig.align='center'}
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=10, fig.height= 6, eval=T, fig.align='center'}
 enrich_dt <- fread("data/target_enrichment.tsv")
 dc <- c( "C01","C20", "C15","C04","C16", "C05", "C06", "C08", "C14",   "C18",  "C10",   "F03")
 
- ggplot(enrich_dt[ enrich_dt$Symbol %in% c("PCSK9", "IL5", "SERPINC1",  "EGFR", "ERBB2", "MET") & disease_class %in% dc], aes(
-  x = disease_class_name,
-  y = log2_enrich,
-  fill = log2_enrich > 0
-)) +
+ggplot(
+  enrich_dt[enrich_dt$Symbol %in% c("PCSK9", "IL5", "SERPINC1",  "EGFR", "ERBB2", "MET") & disease_class %in% dc], 
+  aes(
+    x = disease_class_name,
+    y = log2_enrich,
+    fill = log2_enrich > 0
+  )
+) +
   geom_col(show.legend = FALSE) +
   facet_wrap(~ Symbol, ncol = 3) +
-  scale_fill_manual(values = c("#2C7BB6", "#D7191C")) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(size = 14, hjust = 1),
-      strip.text = element_text(size = 14, face = "bold") ,  
-        axis.text.y = element_text(size = 18)
+  scale_fill_manual(values = c("#4A90E2", disgenet_primary)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "#666666", linewidth = 0.5) +
+  labs(
+    y = "Log2 enrichment", 
+    x = "",
+    title = "Disease Class Enrichment by Target"
   ) +
-  labs(y = "log2 enrichment", x = "") + coord_flip()
+  coord_flip() +
+  theme_minimal(base_size = 12, base_family = "poppins") +
+  theme(
+    axis.text.x = element_text(size = 11),
+    axis.text.y = element_text(size = 10),
+    strip.text = element_text(size = 13, face = "bold"),
+    plot.title = element_text(face = "bold", size = 15, hjust = 0, margin = margin(b = 15)),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_line(color = "#E5E5E5", linewidth = 0.3),
+    panel.grid.major.x = element_line(color = "#E5E5E5", linewidth = 0.3),
+    strip.background = element_rect(fill = "#f8f9fa", color = NA),
+    panel.spacing = unit(1, "lines")
+  )
 
 ```
+
+<div class="figure-caption">
+<strong>Figure 3. Disease class enrichment patterns for selected targets.</strong> Log2 enrichment scores show whether each target's disease associations are concentrated within specific therapeutic areas. Positive values (pink) indicate enrichment, negative values (blue) indicate depletion compared to genome-wide expectations.
+</div>
 
 # Evidence Strength and Target Selection
 
@@ -298,19 +371,20 @@ heatmaply(
 
 ```
 
+<div class="figure-caption">
+<strong>Figure 4. DISGENET evidence strength supporting approved drug indications.</strong> The heatmap shows DISGENET association scores between drug targets (rows) and diseases (columns). Color intensity represents the strength of molecular evidence, with gene symbols displayed in cells. White cells indicate no documented association.
+</div>
+
 
 
 # Beyond Tissue Specificity in Target Selection
 Analysis of GTEx expression profiles revealed patterns in the tissue distribution of 2025 drug targets. A subset shows enriched expression in tissues directly relevant to their therapeutic indication. For example, PCSK9, APOC3, and PAH display strong liver-enriched expression, consistent with their roles in lipid metabolism and amino acid homeostasis. Similarly, MYBPC3 exhibits highly specific expression in cardiac muscle, aligning closely with its role in cardiomyopathy and supporting the paradigm that tissue-restricted expression can enhance on-target efficacy while limiting off-target effects.
 
-The image shows a heatmap of tissue expression profiles of targets for drugs approved in 2025.
-Figure 6. Tissue expression profiles of targets for drugs approved in 2025. The heatmap shows median gene expression across GTEx tissues. The color intensity indicates relative expression levels within each gene. The pink boxes highlight the examples discussed in the text. 
-
 A small subset of approved targets shows very low or near-absent expression across GTEx tissues. In most cases, this likely reflects limitations of bulk adult tissue transcriptomic data rather than true biological absence. Several targets are primarily expressed in rare cell populations or disease-activated states that are poorly captured in healthy reference atlases. For example, IL5 exhibits inducible expression in activated immune cells. In this case, disease context rather than baseline tissue expression underpins therapeutic relevance.
 
 Conversely, other targets exhibit broad or near-ubiquitous expression across tissues. Overall, these findings indicate that tissue restriction is not a universal requirement for druggability. Instead, clinical success often depends on a balance between disease-relevant expression, pathway context, and the ability to achieve functional selectivity through dosing, delivery, or molecular mechanism. 
 
-```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=12, fig.height= 8, eval=T}
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=10, fig.height= 8, eval=T}
 
 gtex<-fread("data/gtex_targets.tsv")
 gtex <- gtex %>% # filter(V1 %in% target_summary$GENE_SYMBOL) %>%
@@ -401,17 +475,17 @@ heatmaply(
   subplot_heights = c(0.15, 0.85)
 )
 
-
-
-
-
 ```
+
+<div class="figure-caption">
+<strong>Figure 5. Tissue expression profiles of targets for drugs approved in 2025.</strong> The heatmap shows median gene expression (log₁₀ transformed TPM) across GTEx tissues. Color intensity indicates relative expression levels within each gene, with hierarchical clustering applied to both tissues and genes.
+</div>
 
 
 # From Crowded to Untapped: Target Maturity in 2025 Approvals
 To place the 2025 approvals in historical context, we examined prior drug and indication coverage for these targets using ChEMBL, excluding current-year approvals. The resulting landscape reveals heterogeneity in prior clinical maturity, ranging from targets with no previously approved drugs to highly exploited targets associated with dozens of compounds and indications. Well-established targets such as EGFR, ESR1, PDCD1, and CACNA1C sit at the highly saturated end of this spectrum, reflecting decades of iterative clinical exploration and extensive target reuse across disease areas.
 
-```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=12, fig.height= 8, eval=T}
+```{r, results='asis', warning= F, echo=FALSE, message=FALSE ,fig.width=10, fig.height= 8, eval=T}
 
 chembldt <- fread("data/targets_chembl.tsv")
 
@@ -439,24 +513,27 @@ p <- ggplot(chembldt, aes(
     "<br>Molecular support: ", support
   )
 )) +
-  geom_point(alpha = 0.75) +
+  geom_point(alpha = 0.7) +
   scale_size_continuous(
     name = "Phase IV drugs",
-    range = c(4, 20)
+    range = c(4, 22)
   ) +
   scale_color_manual(
-    values = c("Y" = "#d02591", "N" = "darkblue"),
+    values = c("Y" = disgenet_primary, "N" = disgenet_secondary),
+    labels = c("Y" = "Yes", "N" = "No"),
     name = "Molecular support"
   ) +
   labs(
     x = "Total drugs in ChEMBL (excluding 2025 approvals)",
     y = "Total indications in ChEMBL",
-    title = "Historical target maturity prior to 2025 FDA approvals"
+    title = "Historical Target Maturity Prior to 2025 FDA Approvals"
   ) +
-  theme_minimal(base_size = 14) +
+  theme_minimal(base_size = 13, base_family = "poppins") +
   theme(
     legend.position = "right",
-    panel.grid.minor = element_blank()
+    plot.title = element_text(face = "bold", size = 15, hjust = 0),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "#E5E5E5", linewidth = 0.3)
   )
 
 # Optional: keep labels for key genes (non-repel)
@@ -464,7 +541,7 @@ p <- p +
   geom_text(
     data = chembldt %>% filter(GENE_SYMBOL %in% label_targets),
     aes(label = GENE_SYMBOL),
-    size = 5,
+    size = 4,
     vjust = -1,
      nudge_y = 10,     # move up
     nudge_x = 1,   
@@ -474,23 +551,29 @@ p <- p +
 # Convert to interactive
 ggplotly(p, tooltip = "text") %>%
   layout(
-    font = list(family = "Poppins, sans-serif", size = 14)
+    font = list(family = "Poppins, sans-serif", size = 12)
   )
 
 ```
+
+<div class="figure-caption">
+<strong>Figure 6. Historical target maturity prior to 2025 FDA approvals.</strong> Distribution of drug and indication coverage for molecular targets derived from ChEMBL (excluding current-year approvals). Point size represents number of Phase IV drugs. Molecular support indicates whether there is information about the target-indication association in DISGENET.
+</div>
 
 
 In contrast, a subset of targets—including CLPP, CTSC, MASP2, and TNFSF13—shows little or no prior indication coverage despite substantial molecular and biological evidence, underscoring their relatively recent or niche clinical emergence.
 
 Together, these patterns show that the 2025 approvals draw from a heterogeneous target landscape, where regulatory success arises both from long-standing clinical familiarity and from comparatively underexploited targets. 
 
-The image shows a graph comparing total indications in ChEMBL and total drugs in ChEMBL (excluding 2025 approvals) for the 2025 FRA-approved drugs.
-Figure 7. Distribution of historical drug and indication coverage for molecular targets of FDA-approved drugs in 2025, derived from ChEMBL and excluding current-year approvals. Molecular support indicates if there is information about the target-indication association in DISGENET.
+# Key Takeaways
 
-# Key takeaways
+<div class="callout">
 The 2025 FDA approvals illustrate that successful drug targets strike a balance between breadth and focus: they are neither narrowly confined to a single disease nor diffusely associated with unrelated conditions, but instead show broad molecular and disease associations anchored within a small number of biologically and therapeutically coherent disease classes. Most approved drugs are supported by molecular evidence that either directly matches the approved indication or aligns closely with related disease phenotypes, underscoring how strong target–indication concordance can reduce translational risk. Analyses based on DISGENET highlight how structured gene–disease association data can help distinguish true therapeutic coherence from superficial disease breadth, making it a valuable resource for interpreting target relevance in a systematic way.
+</div>
 
-While tissue-enriched expression often reinforces classical target-selection heuristics, it is not a universal requirement for druggability: many clinically successful targets are broadly expressed or appear weakly expressed in reference atlases, achieving selectivity instead through disease activation, cell-type restriction, or therapeutic modality. 
+<div class="callout callout-info">
+While tissue-enriched expression often reinforces classical target-selection heuristics, it is not a universal requirement for druggability: many clinically successful targets are broadly expressed or appear weakly expressed in reference atlases, achieving selectivity instead through disease activation, cell-type restriction, or therapeutic modality.
+</div>
 
 Taken together, these findings emphasize that target selection is ultimately a systems-level decision, where integrating molecular evidence, disease-class specificity, expression context, and historical maturity provides a more robust framework than relying on any single metric alone.
 
